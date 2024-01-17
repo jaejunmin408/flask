@@ -9,31 +9,43 @@ topics = [
     {'id':3, 'title':'javascript','body': 'javascript is...'}
 ]
 
-@app.route('/')
-def index():
-    Litags = ''
-    for topic in topics:
-        Litags = Litags + f'<li><a href="/read/{topic["id"]}/">{topic["title"]}</a></li>'
+def template(contents, content):
     return f'''<!doctype html>
     <html>
         <body>
             <h1><a href="/">WEB</a></h1>
             <ol>
-                {Litags}
+                {contents}
             </ol>
-            <h2>Welcome</h2>
-            Hello,Web
+            {content}
         </body>
     </html>
     '''
+
+def getcontents():
+    Litags = ''
+    for topic in topics:
+        Litags = Litags + f'<li><a href="/read/{topic["id"]}/">{topic["title"]}</a></li>'
+    return Litags
+
+@app.route('/')
+def index():
+    return template(getcontents(),'<h2>Welcome,Web</h2')
 
 @app.route('/create/')
 def create():
     return 'Create'
 
-@app.route('/read/<id>/')
+@app.route('/read/<int:id>/')
 def read(id):
-    print(id)
-    return 'Read : <strong>' + id +'</strong>'
+    title = ''
+    body = ''
+    for topic in topics:
+        if id == topic["id"]:
+            title = topic["title"]
+            body = topic["body"]
+            break
+    return template(getcontents(),f'<h2>{title}</h2>{body}')
+   
 
-app.run()
+app.run(debug = True)

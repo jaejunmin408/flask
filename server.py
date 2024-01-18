@@ -115,4 +115,4 @@ def delete(id):
             break
     return redirect('/')    
 
-app.run(debug = True)
+app.run()
